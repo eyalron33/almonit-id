@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta community="almonit">
+        <link
+            rel="stylesheet"
+            href="https://unpkg.com/purecss@1.0.0/build/pure-min.css"
+            integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w"
+            crossorigin="anonymous"
+        />
+        <link
+            href="https://fonts.googleapis.com/css?family=Montserrat"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="eid.css" />
+    </head>
+
+    <body>
+        <div class="header">
+            <img src="../theme/lion_header.png" alt="Almonit" />
+            <div class="header_name">
+                <h3>Almonit ID</h3>
+                <small class="app-version">(v0.0.1)</small>
+            </div>
+            <img
+                src="../theme/lion_header.png"
+                alt="Almonit"
+                style="transform: scaleX(-1);"
+            />
+        </div>
+        <form id="settingsForm" class="panel">
+					<fieldset id="field_disabel_form">
+            <div class="pure-form pure-form-aligned scrollable">
+                <section>
+                    <h3 class="settings__label">Current EID</h3>
+                    <div>
+                        <div id="ENSName" class="wordwrap">ENS: </div>
+                        <div id="Name" class="wordwrap">Name: </div>
+                        <div id="pubKey" class="wordwrap">Public key: </div>
+                        <div id="secKey" class="wordwrap">Secret key: </div>
+                        <div id="hash" class="wordwrap">Hash (put in your ENS name): </div>
+                    </div>
+                </section>
+                <section>
+                    <h3 class="settings__label">Generate EID</h3>
+                    <div>
+                        <div>ENS: <input id="ENSInput" type="text"/> </div>
+                        <div>Name: <input id="NameInput" type="text"/> </div>
+                           <button
+                            class="pure-button pure-button-primary"
+                            type="button"
+                            id="generateEID"
+                        >
+                            Generate
+                        </button>
+                    </div>
+                </section>
+                <section>
+                    <h3 class="settings__label">Recover EID</h3>
+                                       <div>
+                        <div>ENS: <input id="ENSRecover" type="text"/> </div>
+                        <div>Name: <input id="nameRecover" type="text"/> </div>
+                        <div>Secret key: <input id="secKeyRecover" type="text"/> </div>
+                           <button
+                            class="pure-button pure-button-primary"
+                            type="button"
+                            id="recoverEID"
+                        >
+                            Recover
+                        </button>
+                    </div>
+                </section>
+                <section>:
+                    <h3 class="settings__label">Load/save to file</h3>
+
+                           <button
+                            class="pure-button pure-button-primary"
+                            type="button"
+                            id="loadEID"
+                        >
+                            Load from file
+                        </button>
+                        <a
+                            class="pure-button pure-button-primary"
+                            id="saveEID"
+                            href=""
+                        >
+                            Save to file
+                        </a>
+                    </div>
+                </section>
+            </div>
+            <footer class="panel__action">
+                <button
+                    class="pure-button pure-button-primary button-submit"
+                    type="submit"
+                    id="saveSettings"
+                >
+                    Save
+                </button>
+            </footer>
+				</fieldset>
+        </form>
+    </body>
+    <script src="../js/sha3.min.js"></script>
+    <script src="../js/bls/bls_c.js"></script>
+    <script src="../js/bls/bls.js"></script>
+    <script src="../js/bls/BLSID.js"></script>
+    <script src="eid.js"></script>
+</html>

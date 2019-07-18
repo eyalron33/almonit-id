@@ -1,0 +1,553 @@
+
+<!DOCTYPE html>
+<html>
+  <head><script>
+  document.write(
+    '<script src="http://' +
+    (location.host || 'localhost').split(':')[0] +
+    ':35729/livereload.js?snipver=1&amp;port=35729"' +
+    '></' +
+    'script>');
+</script>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Almonit - Dweb Portal</title>
+    <link rel="stylesheet" href="assets/css/app.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+</head>
+
+  <style>
+div.scrollmenu {
+  background-color: #d1d1d1;
+  overflow: auto;
+  white-space: nowrap;
+}
+
+div.scrollmenu a {
+  display: inline-block;
+  color: black;
+  text-align: center;
+  padding: 14px;
+  text-decoration: none;
+}
+
+div.scrollmenu a:hover {
+  background-color: #777;
+}
+</style>
+  <body>
+    <nav class="navbar is-primary">
+    <img style="position: absolute;  display: inline-block; float:left; height: 70px;" src="resources/images/lion.png">
+    <div class="container">
+        <div class="navbar-brand">
+            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div class="navbar-menu" id="navMenu">
+            <div class="navbar-start">
+                <a href="index.html" class="navbar-item is-active">Home</a>
+                
+                
+                    
+                    <a href="https://almonit.club/blog/" class="navbar-item ">Blog</a>
+                    
+                
+                    
+                    <a href="https://almonit.club/blog/ens+ipfs/ENSIPFS-Part-1-Introduction.html" class="navbar-item ">ENS+IPFS</a>
+                    
+                
+                    
+                    <a href="about/index.html" class="navbar-item ">About</a>
+                    
+                
+                
+            </div>
+        </div>
+        <div class="navbar-item" id="almonit_title">
+        <font color=white>Almonit: A Dweb Portal</font>
+    </div>
+    </div>
+</nav>
+
+    <section class="section">
+        <div class="container">
+          <div class="scrollmenu" style="margin-bottom: 30px"><b>
+            <a href="index.html#!" id="filter_all" onclick="toggle('all')" style="color: darkslategray; background-color: gray"> All </a>
+            
+              <a href="index.html#!" id="filter_blogs" onclick="toggle('blogs')">Blogs</a>
+            
+              <a href="index.html#!" id="filter_blockchain_projects" onclick="toggle('blockchain_projects')">Blockchain Projects</a>
+            
+              <a href="index.html#!" id="filter_entertainment" onclick="toggle('entertainment')">Entertainment</a>
+            
+              <a href="index.html#!" id="filter_personal_websites" onclick="toggle('personal_websites')">Personal Websites</a>
+            
+              <a href="index.html#!" id="filter_services" onclick="toggle('services')">Services</a>
+            
+              <a href="index.html#!" id="filter_science" onclick="toggle('science')">Science</a>
+            
+              <a href="index.html#!" id="filter_political" onclick="toggle('political')">Political</a>
+            
+          </b></div>
+            <div class="columns is-multiline">
+                
+                <div class="column">
+                     <div class="content">
+                      
+                        <div id="blogs" style="display: block;">
+                        <h2><a name="Blogs" href="index.html#!" onclick='toggle("blogs"); return false' style="color: black;">Blogs</a>  </h2>
+                        
+                          <p>
+                            <b> Almonit Blog (<a href="http://blog.almonit.eth">blog.almonit.eth</a>)</b>
+                            <br>
+                            The (probably) best blog in the Dweb.
+                          </p>
+                          <br>
+                          
+                      </div>
+                      
+                        <div id="blockchain_projects" style="display: block;">
+                        <h2><a name="Blockchain Projects" href="index.html#!" onclick='toggle("blockchain_projects"); return false' style="color: black;">Blockchain Projects</a>  </h2>
+                        
+                          <p>
+                            <b> Portal Network (<a href="http://portalnetwork.eth">portalnetwork.eth</a>)</b>
+                            <br>
+                            Decentralized Domain Name for the New Internet.
+                          </p>
+                          <br>
+                        
+                          <p>
+                            <b> MyCrypto (<a href="http://mycrypto.dappnode.eth">mycrypto.dappnode.eth</a>)</b>
+                            <br>
+                            MyCrypto is a free, open-source interface for interacting with the blockchain.
+                          </p>
+                          <br>
+                        
+                          <p>
+                            <b> Iexec (<a href="http://doracle.eth">doracle.eth</a>)</b>
+                            <br>
+                            Iexec price Doracle.
+                          </p>
+                          <br>
+                        
+                          <p>
+                            <b> Iexec Price Feed (<a href="http://pricefeed.doracle.eth">pricefeed.doracle.eth</a>)</b>
+                            <br>
+                            Price Feed by iExec
+                          </p>
+                          <br>
+                        
+                          <p>
+                            <b> Kitsune Wallet (<a href="http://kitsune-wallet.eth">kitsune-wallet.eth</a>)</b>
+                            <br>
+                            KitsuneWallet is a framework that helps developper build upgradeable and reconfigurable on-chain wallets.
+                          </p>
+                          <br>
+                          
+                      </div>
+                      
+                        <div id="entertainment" style="display: block;">
+                        <h2><a name="Entertainment" href="index.html#!" onclick='toggle("entertainment"); return false' style="color: black;">Entertainment</a>  </h2>
+                        
+                          <p>
+                            <b> Digitally Rare (<a href="http://digitallyrare.eth">digitallyrare.eth</a>)</b>
+                            <br>
+                            A podcast where Matt Condon and Jonathan Mann explore what it means to own things on the blockchain beyond.
+                          </p>
+                          <br>
+                        
+                          <p>
+                            <b> Big and Small (<a href="http://game.portalnetwork.eth">game.portalnetwork.eth</a>)</b>
+                            <br>
+                            A fun-looking blockchain game.
+                          </p>
+                          <br>
+                        
+                          <p>
+                            <b> Chuck-a-Luck (<a href="http://web3casino.eth">web3casino.eth</a>)</b>
+                            <br>
+                            A blockchain casino game.
+                          </p>
+                          <br>
+                        
+                          <p>
+                            <b> Lil siri (<a href="http://lilsiri.eth">lilsiri.eth</a>)</b>
+                            <br>
+                            Electroni music artist.
+                          </p>
+                          <br>
+                          
+                      </div>
+                      
+                        <div id="personal_websites" style="display: block;">
+                        <h2><a name="Personal Websites" href="index.html#!" onclick='toggle("personal_websites"); return false' style="color: black;">Personal Websites</a>  </h2>
+                        
+                          <p>
+                            <b> Pepesza (<a href="http://pepesza.eth">pepesza.eth</a>)</b>
+                            <br>
+                            Erlang expert, console dweller and enthusiast of distributed systems.
+                          </p>
+                          <br>
+                        
+                          <p>
+                            <b> Monkybrain (<a href="http://monkybrain.eth">monkybrain.eth</a>)</b>
+                            <br>
+                            Philip Prophet.
+                          </p>
+                          <br>
+                        
+                          <p>
+                            <b> Christopher Shen (<a href="http://christophershen.eth">christophershen.eth</a>)</b>
+                            <br>
+                            Founder at Portal Network.
+                          </p>
+                          <br>
+                        
+                          <p>
+                            <b> Phyrex Tsai (<a href="http://phyrextsai.eth">phyrextsai.eth</a>)</b>
+                            <br>
+                            Founder at Portal Network.
+                          </p>
+                          <br>
+                        
+                          <p>
+                            <b> Graham Nelson (<a href="http://cv.gnelson.eth">cv.gnelson.eth</a>)</b>
+                            <br>
+                            Digital Assets Tech Lead Investec.
+                          </p>
+                          <br>
+                        
+                          <p>
+                            <b> Neel Yadav (<a href="http://neelyadav.eth">neelyadav.eth</a>)</b>
+                            <br>
+                            Neel Yadav.
+                          </p>
+                          <br>
+                        
+                          <p>
+                            <b> Matt Condon (<a href="http://mattcondon.eth">mattcondon.eth</a>)</b>
+                            <br>
+                            Matt Condon.
+                          </p>
+                          <br>
+                        
+                          <p>
+                            <b> Hadrien Croubois (<a href="http://hadriencroubois.eth">hadriencroubois.eth</a>)</b>
+                            <br>
+                            French PhD in computer science from the École Normale Supérieure de Lyon. Blockchain, Cloud and distributed systems expert.
+                          </p>
+                          <br>
+                        
+                          <p>
+                            <b> Destiner (<a href="http://web.destiner.eth">web.destiner.eth</a>)</b>
+                            <br>
+                            Timur Badretdinov, also known as Destiner.
+                          </p>
+                          <br>
+                        
+                          <p>
+                            <b> Alex Fisher (<a href="http://alexfisher.eth">alexfisher.eth</a>)</b>
+                            <br>
+                            Alex Fisher.
+                          </p>
+                          <br>
+                        
+                          <p>
+                            <b> John Kane (<a href="http://johnkane.eth">johnkane.eth</a>)</b>
+                            <br>
+                            A Programmer.
+                          </p>
+                          <br>
+                          
+                      </div>
+                      
+                        <div id="services" style="display: block;">
+                        <h2><a name="Services" href="index.html#!" onclick='toggle("services"); return false' style="color: black;">Services</a>  </h2>
+                        
+                          <p>
+                            <b> Hozt (<a href="http://hozt.portalnetworkweb.eth">hozt.portalnetworkweb.eth</a>)</b>
+                            <br>
+                            Decentralized Hosting.
+                          </p>
+                          <br>
+                        
+                          <p>
+                            <b> Badger Ethereum Wallet (<a href="http://badger.merklework.eth">badger.merklework.eth</a>)</b>
+                            <br>
+                            An Ethereum wallet.
+                          </p>
+                          <br>
+                        
+                          <p>
+                            <b> Keydonix Open (<a href="http://liquid-long.keydonix.eth">liquid-long.keydonix.eth</a>)</b>
+                            <br>
+                            Open a leveraged ETH position.
+                          </p>
+                          <br>
+                        
+                          <p>
+                            <b> Keydonix close (<a href="http://liquid-close.keydonix.eth">liquid-close.keydonix.eth</a>)</b>
+                            <br>
+                            Close a leveraged ETH position.
+                          </p>
+                          <br>
+                        
+                          <p>
+                            <b> Turms Anonymous Message Transport (<a href="http://turmsamt.eth">turmsamt.eth</a>)</b>
+                            <br>
+                            Turms AMT (Anonymous Message Transport) is a DApp for peer-to-peer messaging between Ethereum addresses.
+                          </p>
+                          <br>
+                        
+                          <p>
+                            <b> Ethereum Name Service Registrar (<a href="http://ensmanager.matoken.eth">ensmanager.matoken.eth</a>)</b>
+                            <br>
+                            An experiment trying to create ENS manager as an IPFS website.
+                          </p>
+                          <br>
+                        
+                          <p>
+                            <b> ATMarketplace (<a href="http://atmarketplace.eth">atmarketplace.eth</a>)</b>
+                            <br>
+                            A 100% fully decentralized App store.
+                          </p>
+                          <br>
+                          
+                      </div>
+                      
+                        <div id="science" style="display: block;">
+                        <h2><a name="Science" href="index.html#!" onclick='toggle("science"); return false' style="color: black;">Science</a>  </h2>
+                        
+                          <p>
+                            <b> Amoeba Core (<a href="http://amoebacore.eth">amoebacore.eth</a>)</b>
+                            <br>
+                            Amoeba Core OS and toolchain for training and conducting slime mould (Physarum polycephalum) based computation engines.
+                          </p>
+                          <br>
+                          
+                      </div>
+                      
+                        <div id="political" style="display: block;">
+                        <h2><a name="Political" href="index.html#!" onclick='toggle("political"); return false' style="color: black;">Political</a>  </h2>
+                        
+                          <p>
+                            <b> Nathan Clay (<a href="http://nathanclayforcongress.eth">nathanclayforcongress.eth</a>)</b>
+                            <br>
+                            Natahn Clay for congress.
+                          </p>
+                          <br>
+                        
+                          <p>
+                            <b> Brad Sherman Mordor (<a href="http://bradsherman.eth">bradsherman.eth</a>)</b>
+                            <br>
+                            Satire website about Brad Sherman.
+                          </p>
+                          <br>
+                          
+                      </div>
+                      
+                     </div>
+                </div>
+                
+                <div class="column is-4-desktop is-12-tablet">
+                    <p class="title is-4">Featured</p>
+
+<div class="columns is-multiline">
+
+    <div id="Chat" class="column is-12">
+      <div id="ChatBox" style="
+        display:block;
+        width:100%;
+        border-style: solid;
+        height:400px;
+        background-color:#475;
+        overflow:scroll;">
+      </div>
+      <textarea id="Message" cols="40" rows="1" style="width: 100%; height: 30px;">
+      </textarea>
+      <button type="button" id="sendmessage">
+        Send
+      </button>
+    </div>
+    
+    <div class="column is-12">
+      <div class="card-image" style="border-style: solid; border-radius: 25px; overflow:hidden">
+      	<a href="http://game.portalnetwork.eth/"><img src="resources/images/featured1.jpg" alt="Big and Small" style="border-bottom: solid;"></a>
+      	&nbsp; <b> Big and Small</b><br>
+      	&nbsp; A fun-looking blockchain game.
+      	<br><br>
+    	</div>
+    </div>
+    
+    <div class="column is-12">
+      <div class="card-image" style="border-style: solid; border-radius: 25px; overflow:hidden">
+      	<a href="http://blog.almonit.eth/"><img src="resources/images/featured2.jpg" alt="Almonit Blog" style="border-bottom: solid;"></a>
+      	&nbsp; <b> Almonit Blog</b><br>
+      	&nbsp; The (probably) best blog in the Dweb.
+      	<br><br>
+    	</div>
+    </div>
+    
+    <div class="column is-12">
+      <div class="card-image" style="border-style: solid; border-radius: 25px; overflow:hidden">
+      	<a href="http://hozt.portalnetworkweb.eth/"><img src="resources/images/featured3.jpg" alt="Hozt" style="border-bottom: solid;"></a>
+      	&nbsp; <b> Hozt</b><br>
+      	&nbsp; Decentralized Hosting.
+      	<br><br>
+    	</div>
+    </div>
+    
+</div>
+
+
+
+
+                </div>
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        
+        
+        <div class="columns is-multiline">
+            
+            <div class="column has-text-centered">
+                <div>
+                    <a href="index.html" class="link">Home</a>
+                </div>
+            </div>
+            
+            <div class="column has-text-centered">
+                <div>
+                    <a href="https://almonit.club/blog" class="link">Blog</a>
+                </div>
+            </div>
+            
+            <div class="column has-text-centered">
+                <div>
+                    <a href="privacy-policy/index.html" class="link">Privacy Policy</a>
+                </div>
+            </div>
+            
+        </div>
+        
+    </div>
+</footer>
+    <script src="assets/js/app.js" type="text/javascript"></script>
+  </body>
+</html>
+
+<script>
+    function toggle(disp) {
+      if (disp !== "all")
+      {
+        
+          ele = document.getElementById("blogs");
+          ele.style.display = "none";
+
+          ele = document.getElementById("filter_blogs");
+          ele.style.backgroundColor = "#d1d1d1";
+        
+          ele = document.getElementById("blockchain_projects");
+          ele.style.display = "none";
+
+          ele = document.getElementById("filter_blockchain_projects");
+          ele.style.backgroundColor = "#d1d1d1";
+        
+          ele = document.getElementById("entertainment");
+          ele.style.display = "none";
+
+          ele = document.getElementById("filter_entertainment");
+          ele.style.backgroundColor = "#d1d1d1";
+        
+          ele = document.getElementById("personal_websites");
+          ele.style.display = "none";
+
+          ele = document.getElementById("filter_personal_websites");
+          ele.style.backgroundColor = "#d1d1d1";
+        
+          ele = document.getElementById("services");
+          ele.style.display = "none";
+
+          ele = document.getElementById("filter_services");
+          ele.style.backgroundColor = "#d1d1d1";
+        
+          ele = document.getElementById("science");
+          ele.style.display = "none";
+
+          ele = document.getElementById("filter_science");
+          ele.style.backgroundColor = "#d1d1d1";
+        
+          ele = document.getElementById("political");
+          ele.style.display = "none";
+
+          ele = document.getElementById("filter_political");
+          ele.style.backgroundColor = "#d1d1d1";
+        
+        // change color also to all
+        ele = document.getElementById("filter_all");
+        ele.style.backgroundColor = "#d1d1d1";
+
+        //filter content
+        ele = document.getElementById(disp);
+        ele.style.display = "block";
+
+        //change selected option color in scroll menu
+        ele = document.getElementById("filter_" + disp);
+        ele.style.backgroundColor = "Gray";
+      } else {
+        
+          ele = document.getElementById("blogs");
+          ele.style.display = "block";
+
+          ele = document.getElementById("filter_blogs");
+          ele.style.backgroundColor = "#d1d1d1";
+        
+          ele = document.getElementById("blockchain_projects");
+          ele.style.display = "block";
+
+          ele = document.getElementById("filter_blockchain_projects");
+          ele.style.backgroundColor = "#d1d1d1";
+        
+          ele = document.getElementById("entertainment");
+          ele.style.display = "block";
+
+          ele = document.getElementById("filter_entertainment");
+          ele.style.backgroundColor = "#d1d1d1";
+        
+          ele = document.getElementById("personal_websites");
+          ele.style.display = "block";
+
+          ele = document.getElementById("filter_personal_websites");
+          ele.style.backgroundColor = "#d1d1d1";
+        
+          ele = document.getElementById("services");
+          ele.style.display = "block";
+
+          ele = document.getElementById("filter_services");
+          ele.style.backgroundColor = "#d1d1d1";
+        
+          ele = document.getElementById("science");
+          ele.style.display = "block";
+
+          ele = document.getElementById("filter_science");
+          ele.style.backgroundColor = "#d1d1d1";
+        
+          ele = document.getElementById("political");
+          ele.style.display = "block";
+
+          ele = document.getElementById("filter_political");
+          ele.style.backgroundColor = "#d1d1d1";
+        
+
+        ele = document.getElementById("filter_all");
+        ele.style.backgroundColor = "Gray";
+      }
+    }
+</script>
