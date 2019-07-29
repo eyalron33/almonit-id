@@ -24,7 +24,8 @@ function connected(p) {
   portScoketIO.onMessage.addListener(function(m) {
   	switch (m.action) {
   		case "init":
-	    	var server = "http://127.0.0.1:1992";
+	    	//var server = "http://127.0.0.1:1992";
+	    	var server = "http://95.179.128.10:1992";
 	  		socket = io.connect(server);
 
 	  		var data = m.data;
