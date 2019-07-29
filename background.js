@@ -24,7 +24,7 @@ function connected(p) {
   portScoketIO.onMessage.addListener(function(m) {
   	switch (m.action) {
   		case "init":
-	    	var server = "http://95.179.128.10:1992";
+	    	var server = "http://127.0.0.1:1992";
 	  		socket = io.connect(server);
 
 	  		var data = m.data;
@@ -37,17 +37,31 @@ function connected(p) {
 
 				socket.on('return_webRTC_data', function(data) {
 					dataReceived = JSON.parse(data);
-					portScoketIO.postMessage({type: 'return_webRTC_data', data: dataReceived});
+					if (verifyEID(dataReceived.EID)) {
+						portScoketIO.postMessage({type: 'return_webRTC_data', data: dataReceived});
+					}
 				});
 
 				socket.on('connection_request', function (data) {
 					dataReceived = JSON.parse(data);
-					portScoketIO.postMessage({type: 'connection_request', data: dataReceived});
+					if (verifyEID(dataReceived.EID)) {
+						portScoketIO.postMessage({type: 'connection_request', data: dataReceived});
+					}
 				});
 				break;
 			case "sign":
-					let signature = EID.secKey.sign(m.data);
-					portScoketIO.postMessage({type: 'signature', message: m.data, signature: signature.serializeToHexStr()});
+					{
+					let signature = EID.secKey.sign(JSON.stringify(m.data));
+					portScoketIO.postMessage({type: 'sign', data: m.data, signature: signature.serializeToHexStr()});
+					}
+				break;
+			case "verifySignature": {
+					var pubKey = bls.deserializeHexStrToPublicKey(m.pubKey);
+					let signature = bls.deserializeHexStrToSignature(m.signature);
+					messageData = JSON.parse(m.data);
+	    		var verifiedSignature = pubKey.verify(signature, JSON.stringify(messageData.data));
+					portScoketIO.postMessage({type: 'verifySignature',  data: m.data, signature: m.signature, verified: verifiedSignature});
+					}
 				break;
 			default:
 				console.log(m);
@@ -299,7 +313,7 @@ function loadSettingsSetSession(storage) {
   if (Object.entries(item).length != 0) {
     item = item.EID;
     bls.init().then(() => {
-    	var EID = {
+    	EID = {
 	      "ENS": item.ENS,
 	      "name": item.name,
 	      "secKey": bls.deserializeHexStrToSecretKey(item.secKey)
@@ -335,6 +349,32 @@ function hextoIPFS(hex) {
 
 	return ipfsHash;
 }
+
+/**
+ * [verifyEID verify if EID is written in ENS]
+ * @return {[type]} [description]
+ */
+function verifyEID(EID) {
+	return WEB3ENS.getContent(EID.ENS)
+		.then(
+			function(address) {
+				console.log("FOUDN ENS NAME");
+				let hash = sha3_256(JSON.stringify(EID));
+				console.log("address: ", address);
+				console.log("hash: ", hash);
+				return (("0x" + address) == hash);
+			},
+			function(error) {
+				console.log("ERROR IN VERIFYING");
+				return false;
+			}
+		)
+		.catch(function() {
+			console.log("NOT FOUND ENS NAME");
+			return false;
+		});
+}
+
 
 // extract a domain from url
 function urlDomain(data) {

@@ -1,6 +1,6 @@
 class Peer {
 
-	constructor(index, callback=null, role="init", remote_index = null, peer_pubkey = null) {
+	constructor(index, callback=null, role="init", remote_index = null, peer_pubkey = null, EID = null) {
 		var configuration2 = {iceServers: [{urls: 'stun:stun.stunprotocol.org'}]};
 		this.dataChannel 			= null;
 		this.remoteData				= null;
@@ -13,6 +13,7 @@ class Peer {
     this.index  = index;
 		this.remoteIndex	= remote_index;
     this.peer_pubkey = peer_pubkey;
+    this.EID = EID;
     this.role 	= role;
 		
 		this.webRTC = new RTCPeerConnection(configuration2);

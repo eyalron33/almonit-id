@@ -1,6 +1,5 @@
 var url = document.getElementById('url');
 var shuffleBtn = document.getElementById('shuffleBtn');
-var generateId = document.getElementById('generateId');
 
 var urlText = new WordShuffler(url, {
 	textColor: '#0078e7',
@@ -72,6 +71,3 @@ shuffleBtn.addEventListener('click', function() {
 	buttonText.restart();
 });
 
-generateId.addEventListener('click', function() {
-	createBLSID();
-});

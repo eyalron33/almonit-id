@@ -6,6 +6,7 @@ var		discussions = new Discussions("Blabber Mouthers");
 var   EID;
 var		portScoketIO;
 
+
 //temp variable
 var messages = {};
 
@@ -30,17 +31,15 @@ document.getElementById("sendmessage").addEventListener("click", sendMessage)
 
 /* socket.io part */
 function connectServer(index, peer) {		
-	// var server = "http://127.0.0.1:1981";
- //  var socket = io.connect(server);
 
 	var datatoSend = {
 		"type": "connection_request",
 		"from_id": index,
 		"from": EID.pubKey, 
+		"EID": EID,
 		"msg": peer.localSTUNICEData
 	};
 
-	console.log("about to open port!");
 	portScoketIO = browser.runtime.connect({name:"portFromWebP2P"});
 
 	portScoketIO.postMessage({connectSocketIO: true, data: datatoSend, action: "init"});
@@ -53,23 +52,37 @@ function connectServer(index, peer) {
   			break;
   		case "return_webRTC_data":
 		  	console.log("return_webRTC_data: ", m);
-		    Peers[m.data.to_id].peer_pubkey = m.data.from;
-				Peers[m.data.to_id].remoteIndex = m.data.from_id; 
-				Peers[m.data.to_id].setRemoteData(m.data.msg); 
+		  	// if (verifyEID(m.data.EID)) {
+			    Peers[m.data.to_id].peer_pubkey = m.data.from;
+					Peers[m.data.to_id].remoteIndex = m.data.from_id; 
+					Peers[m.data.to_id].EID = m.data.EID;
+					Peers[m.data.to_id].setRemoteData(m.data.msg);
+				// }
 				break;
 			case "connection_request":
-				console.log("connection_request: ", m);
-				newWebRTCConnection(returnWebRTCDataToPeer, "wait", m.data);
+				// var verified = verifyEID(m.data.EID);
+				// if (verified)
+					newWebRTCConnection(returnWebRTCDataToPeer, "wait", m.data);
 				break;
-			// case: "signature":
-			// 	Peers[peer].dataChannel
-			// 		.send(JSON.stringify({url: ENSname, message: m.data.message, signature: m.data.signature}));
-			// 	break;
+			case "sign":
+				console.log(m);
+				for (var peer in Peers) {
+    			if (Peers[peer].dataChannel && (Peers[peer].dataChannel.readyState == "open"))
+	    			Peers[peer].dataChannel
+						.send(JSON.stringify({data: m.data, signature: m.signature}));
+    		}
+				break;
+			case "verifySignature":
+				if (m.verified) {
+					data = JSON.parse(m.data);
+					document.getElementById("ChatBox").innerHTML = data.data.message + "<br>" + document.getElementById("ChatBox").innerHTML;
+		  		forwardMessage(JSON.stringify({data: m.data, signature: m.signature}), data.from);
+		  	}
+				break;
 			default:
 				console.log("error in switch");
   	}
 	});  
-	console.log("opened port!");
 }
 
 function newWebRTCConnection(callback = null, role="init", peer_data = null) {
@@ -90,7 +103,7 @@ function newWebRTCConnection(callback = null, role="init", peer_data = null) {
 		Peers_pubkey[peer_data.from] = i;
 
 		// create webRTC object
-		Peers[i] = new Peer(i, callback, role, peer_data.from_id, peer_data.from);
+		Peers[i] = new Peer(i, callback, role, peer_data.from_id, peer_data.from, peer_data.EID);
 		Peers[i].webRTC.ondatachannel = function(e) {
 			onDataChannel(e, i);
 		}
@@ -112,12 +125,13 @@ function onSendChannelStateChange(ev) {
  }
 
 function onReceiveMessage(e, i) {
-	messageID = md5(e.data);
 	var data = JSON.parse(e.data);
-	if ((data.url == ENSname) && (!messages[messageID])) {
+	var msgData = data.data;
+	var msgSignature = data.signature;
+	messageID = md5(e.data);
+	if ((msgData.url == ENSname) && (!messages[messageID])) {
 		messages[messageID] = true;
-	  document.getElementById("ChatBox").innerHTML = data.message + "<br>" + document.getElementById("ChatBox").innerHTML;
-	  forwardMessage(e.data, i);
+	  portScoketIO.postMessage({action: "verifySignature", data: e.data, signature: msgSignature, pubKey: Peers[i].EID.pubKey});
 	}
 }
 
@@ -129,12 +143,11 @@ function returnWebRTCDataToPeer(index, peer) {
 		"from_id": index,
 		"from": EID.pubKey, 
 		"to":	peer.peer_pubkey,
+		"EID": EID,
 		"msg": peer.localSTUNICEData
 	};
 	console.log("send to node");
 	portScoketIO.postMessage({action: "send_to_node", datatoSend});
-  //socket.emit('send_to_node', JSON.stringify(data));	
-	//console.log(JSON.stringify(data));
 }
 
 function msgFromServer(message) {
@@ -156,10 +169,12 @@ function sendMessage(e) {
   		document.getElementById("Message").focus();
 		}
 
-    for (var peer in Peers) {
-    	if (Peers[peer].dataChannel && (Peers[peer].dataChannel.readyState == "open"))
-    		Peers[peer].dataChannel.send(JSON.stringify({url: ENSname, message: msg }));
-    }
+		portScoketIO.postMessage({action: "sign", data: {url: ENSname, message: msg, from: EID.pubKey}});
+
+    // for (var peer in Peers) {
+    // 	if (Peers[peer].dataChannel && (Peers[peer].dataChannel.readyState == "open"))
+    // 		Peers[peer].dataChannel.send(JSON.stringify({url: ENSname, message: msg }));
+    // }
 }
 
 function forwardMessage(message, besides) {
