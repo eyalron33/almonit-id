@@ -1,7 +1,9 @@
 class Peer {
 
 	constructor(index, callback=null, role="init", remote_index = null, peer_pubkey = null, EID = null) {
-		var configuration2 = {iceServers: [{urls: 'stun:stun.stunprotocol.org'}, {urls: 'turn:95.179.128.10?transport=udp'}, {urls: 'turn:95.179.128.10?transport=tcp'}, {urls: 'turn:95.179.128.10'} ]};
+		var configuration2 = {iceServers: [{urls: 'stun:stun.stunprotocol.org'}, 
+		{urls: 'turn:95.179.128.10?transport=udp', username: 'testuser', credential: 'thisisatest'},
+		{urls: 'turn:95.179.128.10?transport=tcp', username: 'testuser', credential: 'thisisatest'} ]};
 		this.dataChannel 			= null;
 		this.remoteData				= null;
 	
