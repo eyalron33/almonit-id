@@ -10,7 +10,7 @@ var		portScoketIO;
 //temp variable
 var messages = {};
 
-const configuration = {iceServers: [{urls: 'stun:stun.stunprotocol.org'}]};
+//const configuration = {iceServers: [{urls: 'stun:stun.stunprotocol.org'}]};
 
 browser.storage.local.get('EID').then(function(item) {
 	var ey = "coscos";
@@ -53,6 +53,7 @@ function connectServer(index, peer) {
   		case "return_webRTC_data":
 		  	console.log("return_webRTC_data: ", m);
 		  	// if (verifyEID(m.data.EID)) {
+			    Peers_pubkey[m.data.from] = m.data.to_id;
 			    Peers[m.data.to_id].peer_pubkey = m.data.from;
 					Peers[m.data.to_id].remoteIndex = m.data.from_id; 
 					Peers[m.data.to_id].EID = m.data.EID;
@@ -73,9 +74,10 @@ function connectServer(index, peer) {
     		}
 				break;
 			case "verifySignature":
+				console.log("verified: ", m);
 				if (m.verified) {
 					data = JSON.parse(m.data);
-					document.getElementById("ChatBox").innerHTML = data.data.message + "<br>" + document.getElementById("ChatBox").innerHTML;
+					document.getElementById("ChatBox").innerHTML = "<font color='red'>" + Peers[Peers_pubkey[data.data.from]].EID.name + "</font>: " + data.data.message + "<br>" + document.getElementById("ChatBox").innerHTML;
 		  		forwardMessage(JSON.stringify({data: m.data, signature: m.signature}), data.from);
 		  	}
 				break;
@@ -162,7 +164,7 @@ function sendMessage(e) {
 	  msg = document.getElementById("Message").value;
 	  if (msg !== "") {
 	    document.getElementById("ChatBox").innerHTML = 
-	          "<font color='blue'>" + msg + "</font>"
+	          "<font color='blue'> me:</font> " + msg 
 	          + "<br>" 
 	          + document.getElementById("ChatBox").innerHTML;
 	    document.getElementById("Message").value = "";
