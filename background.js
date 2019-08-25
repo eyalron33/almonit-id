@@ -25,7 +25,7 @@ function connected(p) {
   	switch (m.action) {
   		case "init":
 	    	// var server = "http://127.0.0.1:1992";
-	    	var server = "http://95.179.128.10:1992";
+	    	var server = "http://95.179.128.10:1993";
 	  		socket = io.connect(server);
 
 	  		var data = m.data;

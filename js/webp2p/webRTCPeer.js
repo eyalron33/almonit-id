@@ -5,8 +5,12 @@ class Peer {
 		{urls: 'turn:95.179.128.10?transport=udp', username: 'test', credential: 'test'},
 		{urls: 'turn:95.179.128.10?transport=tcp', username: 'test', credential: 'test'} ]};
 		// var configuration2 = {iceServers: [{urls: 'stun:stun.stunprotocol.org'}, 
-		// {urls: 'turn:192.168.0.189?transport=udp', username: 'test', credential: 'test'},
-		// {urls: 'turn:192.168.0.189?transport=tcp', username: 'test', credential: 'test'} ]};
+		// {urls: 'turn:192.168.0.52?transport=udp', username: 'test', credential: 'test'},
+		// {urls: 'turn:192.168.0.52?transport=tcp', username: 'test', credential: 'test'} ]};
+		// var configuration2 = {iceServers: [{urls: 'stun:stun.stunprotocol.org'}, 
+		// {urls: 'turn:3.226.238.166?transport=udp', username: 'test', credential: 'test'},
+		// {urls: 'turn:3.226.238.166?transport=tcp', username: 'test', credential: 'test'} ]};
+
 		this.dataChannel 			= null;
 		this.remoteData				= null;
 	
