@@ -13,9 +13,6 @@ var messages = {};
 //const configuration = {iceServers: [{urls: 'stun:stun.stunprotocol.org'}]};
 
 browser.storage.local.get('EID').then(function(item) {
-	var ey = "coscos";
-	var x = document.getElementById("almonit_title");
-	x.innerHTML = ey;
   if (Object.entries(item).length != 0) {
     item = item.EID;
     EID = {
@@ -36,6 +33,7 @@ function connectServer(index, peer) {
 		"type": "connection_request",
 		"from_id": index,
 		"from": EID.pubKey, 
+		"relay": peer.relay,
 		"EID": EID,
 		"msg": peer.localSTUNICEData
 	};
@@ -63,7 +61,7 @@ function connectServer(index, peer) {
 			case "connection_request":
 				// var verified = verifyEID(m.data.EID);
 				// if (verified)
-					newWebRTCConnection(returnWebRTCDataToPeer, "wait", m.data);
+					newWebRTCConnection(returnWebRTCDataToPeer, "wait", m.data.relay,  m.data);
 				break;
 			case "sign":
 				console.log(m);
@@ -87,12 +85,16 @@ function connectServer(index, peer) {
 	});  
 }
 
-function newWebRTCConnection(callback = null, role="init", peer_data = null) {
+function newWebRTCConnection(callback = null, role="init", relay=false, peer_data = null) {
   webRTC_data_index = webRTC_data_index + 1;
 	var i = webRTC_data_index; //using 'i' for brevity of code
   
 	if (role=="init") {
-		Peers[i] = new Peer(i, callback, role);
+		if (peer_data == null)
+			Peers[i] = new Peer(i, callback, role, relay);
+		else
+			Peers[i] = new Peer(i, callback, role, relay, null, peer_data.peer_pubkey, peer_data.EID);
+
 		Peers[i].dataChannel = Peers[i].webRTC.createDataChannel('sendDataChannel', null);  
 
 	  Peers[i].dataChannel.onopen = onSendChannelStateChange;
@@ -105,7 +107,7 @@ function newWebRTCConnection(callback = null, role="init", peer_data = null) {
 		Peers_pubkey[peer_data.from] = i;
 
 		// create webRTC object
-		Peers[i] = new Peer(i, callback, role, peer_data.from_id, peer_data.from, peer_data.EID);
+		Peers[i] = new Peer(i, callback, role, relay, peer_data.from_id, peer_data.from, peer_data.EID);
 		Peers[i].webRTC.ondatachannel = function(e) {
 			onDataChannel(e, i);
 		}
@@ -149,6 +151,20 @@ function returnWebRTCDataToPeer(index, peer) {
 		"msg": peer.localSTUNICEData
 	};
 	console.log("send to node");
+	portScoketIO.postMessage({action: "send_to_node", datatoSend});
+}
+
+function sendNewWebRTCDataToPeer(index, peer) {
+	var datatoSend = {
+		"type": "connection_request",
+		"to": peer.peer_pubkey,
+		"from_id": index,
+		"from": EID.pubKey, 
+		"EID": EID,
+		"relay": peer.relay,
+		"msg": peer.localSTUNICEData
+	};
+
 	portScoketIO.postMessage({action: "send_to_node", datatoSend});
 }
 
