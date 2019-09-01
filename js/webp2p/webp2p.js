@@ -76,7 +76,7 @@ function connectServer(index, peer) {
 				if (m.verified) {
 					data = JSON.parse(m.data);
 					document.getElementById("ChatBox").innerHTML = "<font color='red'>" + Peers[Peers_pubkey[data.data.from]].EID.name + "</font>: " + data.data.message + "<br>" + document.getElementById("ChatBox").innerHTML;
-		  		forwardMessage(JSON.stringify({data: m.data, signature: m.signature}), data.from);
+		  		forwardMessage(JSON.stringify({data: data.data, signature: m.signature}), data.from);
 		  	}
 				break;
 			default:

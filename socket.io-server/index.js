@@ -13,8 +13,8 @@ class Node {
 	}
 }
 
-var names = {};
-var inverse_names={};
+var names = {}; //pubkey -> node
+var inverse_names={}; //socket.id -> pubkey
 var connectCounter = 0;
 
 function connect_to_random_node(data) {

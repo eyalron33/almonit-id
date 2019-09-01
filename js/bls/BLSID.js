@@ -62,6 +62,22 @@ function saveEID(ENS, name, secKey, pubKey) {
 		browser.storage.local.set({EID});
 }
 
+function LoadEID() {
+	var file = this.files[0];
+
+	var reader = new FileReader();
+  reader.readAsText(file);
+  reader.onload = () => {
+  	let loadedEID = JSON.parse(reader.result);
+    bls.init().then(() => {
+		var sec = bls.deserializeHexStrToSecretKey(loadedEID.secKey);
+		var pub = sec.getPublicKey();
+
+		saveEID(loadedEID.ENS, loadedEID.name, sec.serializeToHexStr(), pub.serializeToHexStr());
+	}, err)
+  };
+}
+
 function setEIDPanel(ENS, name, secKey, pubKey, hash) {
 	document.getElementById("ENSName").textContent = "ENS: " + ENS;
 	document.getElementById("Name").textContent = "Name: " + name;

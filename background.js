@@ -64,6 +64,11 @@ function connected(p) {
 					portScoketIO.postMessage({type: 'verifySignature',  data: m.data, signature: m.signature, verified: verifiedSignature});
 					}
 				break;
+				case "verifyEID": {
+					if (verifyEID(dataReceived.EID)) {
+						portScoketIO.postMessage({type: 'verifiedEID', data: dataReceived});
+					}
+				break;
 			default:
 				console.log(m);
 				socket.emit(m.action, JSON.stringify(m.datatoSend));	
