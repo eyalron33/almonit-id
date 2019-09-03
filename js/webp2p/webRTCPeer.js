@@ -1,7 +1,7 @@
 class Peer {
 
 	constructor(index, callback=null, role="init", relay = false, remote_index = null, peer_pubkey = null, EID = null) {
-		var configuration2 = {RTCIceTransportPolicy: "relay", iceServers: [
+		var configuration2 = {iceServers: [
 		{urls: 'stun:stun.stunprotocol.org'}, 
 		{urls: 'turn:95.179.128.10?transport=udp', username: 'test', credential: 'test'},
 		{urls: 'turn:95.179.128.10?transport=tcp', username: 'test', credential: 'test'} ]};
@@ -24,7 +24,12 @@ class Peer {
     this.index  = index;
 		this.remoteIndex	= remote_index;
     this.peer_pubkey = peer_pubkey;
-    this.EID = EID;
+    
+    if (EID !== null) {
+    	this.EID = EID.ENS;
+    	EIDs[EID.ENS] = EID; // we assume ENS was already verified when a Peer is created
+    }
+    
     this.role 	= role;
     
 		// if relay=true, only ice candidates of relay type are considered.

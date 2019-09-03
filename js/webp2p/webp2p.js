@@ -1,5 +1,6 @@
 var		webRTC_data_index = 0; // index of webRTC data sent
 var 	Peers = {};
+var 	EIDs = {};
 var		Peers_pubkey = {};
 var   ChatP2P = new P2PNetwork();
 var		discussions = new Discussions("Blabber Mouthers");
@@ -54,28 +55,33 @@ function connectServer(index, peer) {
 			    Peers_pubkey[m.data.from] = m.data.to_id;
 			    Peers[m.data.to_id].peer_pubkey = m.data.from;
 					Peers[m.data.to_id].remoteIndex = m.data.from_id; 
-					Peers[m.data.to_id].EID = m.data.EID;
+					Peers[m.data.to_id].EID = m.data.EID.ENS;
+					EIDs[m.data.EID.ENS] = m.data.EID;
 					Peers[m.data.to_id].setRemoteData(m.data.msg);
 				// }
 				break;
 			case "connection_request":
-				// var verified = verifyEID(m.data.EID);
-				// if (verified)
 					newWebRTCConnection(returnWebRTCDataToPeer, "wait", m.data.relay,  m.data);
 				break;
 			case "sign":
-				console.log(m);
+				message = JSON.stringify({data: m.data, signature: m.signature});
+				var messageID = md5(message);
+				messages[messageID] = true;
 				for (var peer in Peers) {
     			if (Peers[peer].dataChannel && (Peers[peer].dataChannel.readyState == "open"))
 	    			Peers[peer].dataChannel
-						.send(JSON.stringify({data: m.data, signature: m.signature}));
+						.send(message);
     		}
 				break;
 			case "verifySignature":
 				console.log("verified: ", m);
 				if (m.verified) {
+					if (m.verificationNeeded)
+						EIDs[m.EID.ENS] = m.EID;
+					
 					data = JSON.parse(m.data);
-					document.getElementById("ChatBox").innerHTML = "<font color='red'>" + Peers[Peers_pubkey[data.data.from]].EID.name + "</font>: " + data.data.message + "<br>" + document.getElementById("ChatBox").innerHTML;
+					EIDName = m.EID.name;
+					document.getElementById("ChatBox").innerHTML = "<font color='red'>" + EIDName + "</font>: " + data.data.message + "<br>" + document.getElementById("ChatBox").innerHTML;
 		  		forwardMessage(JSON.stringify({data: data.data, signature: m.signature}), data.from);
 		  	}
 				break;
@@ -135,8 +141,11 @@ function onReceiveMessage(e, i) {
 	messageID = md5(e.data);
 	if ((msgData.url == ENSname) && (!messages[messageID])) {
 		messages[messageID] = true;
-	  portScoketIO.postMessage({action: "verifySignature", data: e.data, signature: msgSignature, pubKey: Peers[i].EID.pubKey});
-	}
+		var verifyEID = (msgData.EID.ENS in EIDs) ? false : true;
+		var authorEID = verifyEID ? msgData.EID : EIDs[msgData.EID.ENS];
+	  	portScoketIO.postMessage({action: "verifySignature", data: e.data, 
+	  														signature: msgSignature, EID: authorEID, verificationNeeded: verifyEID});
+		}
 }
 
 
@@ -187,7 +196,7 @@ function sendMessage(e) {
   		document.getElementById("Message").focus();
 		}
 
-		portScoketIO.postMessage({action: "sign", data: {url: ENSname, message: msg, from: EID.pubKey}});
+		portScoketIO.postMessage({action: "sign", data: {url: ENSname, message: msg, EID: EID}});
 
     // for (var peer in Peers) {
     // 	if (Peers[peer].dataChannel && (Peers[peer].dataChannel.readyState == "open"))

@@ -57,17 +57,22 @@ function connected(p) {
 					}
 				break;
 			case "verifySignature": {
-					var pubKey = bls.deserializeHexStrToPublicKey(m.pubKey);
-					let signature = bls.deserializeHexStrToSignature(m.signature);
-					messageData = JSON.parse(m.data);
-	    		var verifiedSignature = pubKey.verify(signature, JSON.stringify(messageData.data));
-					portScoketIO.postMessage({type: 'verifySignature',  data: m.data, signature: m.signature, verified: verifiedSignature});
-					}
+				if (m.verificationNeeded)
+					if (!verifyEID(m.EID))
+						return;
+
+				var pubKey = bls.deserializeHexStrToPublicKey(m.EID.pubKey);
+				let signature = bls.deserializeHexStrToSignature(m.signature);
+				messageData = JSON.parse(m.data);
+    		var verifiedSignature = pubKey.verify(signature, JSON.stringify(messageData.data));
+				portScoketIO.postMessage({type: 'verifySignature',  data: m.data, signature: 
+								m.signature, EID: m.EID, verificationNeeded: m.verificationNeeded, verified: verifiedSignature});
+				}
 				break;
 				case "verifyEID": {
 					if (verifyEID(dataReceived.EID)) {
-						portScoketIO.postMessage({type: 'verifiedEID', data: dataReceived});
-					}
+						portScoketIO.postMessage({type: 'connection_request', data: dataReceived});
+					}}
 				break;
 			default:
 				console.log(m);
