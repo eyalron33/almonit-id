@@ -10,6 +10,7 @@ var		portScoketIO;
 
 //temp variable
 var messages = {};
+document.getElementById("Message").disabled = true;
 
 //const configuration = {iceServers: [{urls: 'stun:stun.stunprotocol.org'}]};
 
@@ -132,6 +133,7 @@ function onDataChannel(e, i) {
 
 function onSendChannelStateChange(ev) {
 	console.log('Send channel state is: ' + ev);
+	document.getElementById("Message").disabled = false;
  }
 
 function onReceiveMessage(e, i) {

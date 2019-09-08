@@ -24,7 +24,8 @@
   "content_scripts": [
     {
       "matches": ["*://*/ipfs/*"],
-      "js": ["frontend.js", "js/main.js","js/webp2p/webRTCPeer.js", "js/webp2p/discussions.js", "js/webp2p/md5.js", "js/socket.io.js", "js/webp2p/webp2p.js"],
+      "js": ["frontend.js", "js/main.js","js/webp2p/webRTCPeer.js", "js/webp2p/discussions.js",
+       "js/webp2p/lodash.js", "js/webp2p/md5.js", "js/socket.io.js", "js/webp2p/webp2p.js"],
       "css": ["style/main.css"]
     }
   ],
