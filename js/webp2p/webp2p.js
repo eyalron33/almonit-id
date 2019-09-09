@@ -6,7 +6,7 @@ var   ChatP2P = new P2PNetwork();
 var		discussions = new Discussions("Blabber Mouthers");
 var   EID;
 var		portScoketIO;
-
+var 	messagesCollection = []; //collect all messages send and received
 
 //temp variable
 var messages = {};
@@ -27,6 +27,13 @@ browser.storage.local.get('EID').then(function(item) {
 });
 
 document.getElementById("sendmessage").addEventListener("click", sendMessage)
+document.getElementById("Message")
+    .addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) {
+        document.getElementById("sendmessage").click();
+    }
+    event.preventDefault();
+});
 
 /* socket.io part */
 function connectServer(index, peer) {		
@@ -68,6 +75,7 @@ function connectServer(index, peer) {
 				message = JSON.stringify({data: m.data, signature: m.signature});
 				var messageID = md5(message);
 				messages[messageID] = true;
+				messagesCollection[messagesCollection.length] = message; 
 				for (var peer in Peers) {
     			if (Peers[peer].dataChannel && (Peers[peer].dataChannel.readyState == "open"))
 	    			Peers[peer].dataChannel
@@ -83,6 +91,7 @@ function connectServer(index, peer) {
 					data = JSON.parse(m.data);
 					EIDName = m.EID.name;
 					document.getElementById("ChatBox").innerHTML = "<font color='red'>" + EIDName + "</font>: " + data.data.message + "<br>" + document.getElementById("ChatBox").innerHTML;
+					messagesCollection[messagesCollection.length] = JSON.stringify({data: data.data, signature: m.signature});
 		  		forwardMessage(JSON.stringify({data: data.data, signature: m.signature}), data.from);
 		  	}
 				break;
@@ -104,8 +113,12 @@ function newWebRTCConnection(callback = null, role="init", relay=false, peer_dat
 
 		Peers[i].dataChannel = Peers[i].webRTC.createDataChannel('sendDataChannel', null);  
 
-	  Peers[i].dataChannel.onopen = onSendChannelStateChange;
-  	Peers[i].dataChannel.onclose = onSendChannelStateChange;
+	  Peers[i].dataChannel.onopen = function(e) {
+			onSendChannelStateChange(e, i);
+		};
+  	Peers[i].dataChannel.onclose = function(e) {
+			onSendChannelStateChange(e, i);
+		};
   	Peers[i].dataChannel.onmessage = function(e) {
 			onReceiveMessage(e, i);
 		}
@@ -124,30 +137,46 @@ function newWebRTCConnection(callback = null, role="init", relay=false, peer_dat
 
 function onDataChannel(e, i) {
   Peers[i].dataChannel = e.channel;
-  Peers[i].dataChannel.onopen = onSendChannelStateChange;
-  Peers[i].dataChannel.onclose = onSendChannelStateChange;
+  Peers[i].dataChannel.onopen = function(e) {
+			onSendChannelStateChange(e, i);
+		}
+  Peers[i].dataChannel.onclose = function(e) {
+			onSendChannelStateChange(e, i);
+		};
   Peers[i].dataChannel.onmessage = function(e) {
 			onReceiveMessage(e, i);
 		}
 }
 
-function onSendChannelStateChange(ev) {
-	console.log('Send channel state is: ' + ev);
-	document.getElementById("Message").disabled = false;
+function onSendChannelStateChange(ev, i) {
+	console.log('Send channel state is: ' + JSON.stringify(ev));
+	if (document.getElementById("Message").disabled == true && Peers[i].role == "init")
+		Peers[i].dataChannel.send("sendArchive");
+	else
+		document.getElementById("Message").disabled = false;
  }
 
 function onReceiveMessage(e, i) {
-	var data = JSON.parse(e.data);
-	var msgData = data.data;
-	var msgSignature = data.signature;
-	messageID = md5(e.data);
-	if ((msgData.url == ENSname) && (!messages[messageID])) {
-		messages[messageID] = true;
-		var verifyEID = (msgData.EID.ENS in EIDs) ? false : true;
-		var authorEID = verifyEID ? msgData.EID : EIDs[msgData.EID.ENS];
-	  	portScoketIO.postMessage({action: "verifySignature", data: e.data, 
-	  														signature: msgSignature, EID: authorEID, verificationNeeded: verifyEID});
+	if (e.data == "noMessages")
+		document.getElementById("Message").disabled = false;
+	else if (e.data == "sendArchive")
+		sendHistory(i);
+	else {
+		var data = JSON.parse(e.data);
+		if (data.type == "archiveEnd") 
+			document.getElementById("Message").disabled = false;
+
+		var msgData = data.data;
+		var msgSignature = data.signature;
+		messageID = md5(e.data);
+		if ((msgData.url == ENSname) && (!messages[messageID])) {
+			messages[messageID] = true;
+			var verifyEID = (msgData.EID.ENS in EIDs) ? false : true;
+			var authorEID = verifyEID ? msgData.EID : EIDs[msgData.EID.ENS];
+		  	portScoketIO.postMessage({action: "verifySignature", data: e.data, 
+		  														signature: msgSignature, EID: authorEID, verificationNeeded: verifyEID});
 		}
+	}
 }
 
 
@@ -211,6 +240,18 @@ function forwardMessage(message, besides) {
     	if ((parseInt(peer) != besides) && Peers[peer].dataChannel && (Peers[peer].dataChannel.readyState == "open"))
     		Peers[peer].dataChannel.send(message);
     }
+}
+
+// send all messagesCollection to Peer i
+function sendHistory(i) {
+	if (messagesCollection.length == 0)
+		Peers[i].dataChannel.send("noMessages");
+messagesCollection.forEach(function(message, index) {
+	message = JSON.parse(message);
+	if (index+1 == messagesCollection.length) 
+		message["type"] = "archiveEnd";
+	Peers[i].dataChannel.send(JSON.stringify(message));
+	});
 }
 
 // Aux functions
